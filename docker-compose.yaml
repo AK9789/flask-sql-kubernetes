@@ -1,0 +1,28 @@
+version: '3'                            #version
+services:                               #create container with respective to its sepcs
+  application:                                  #container name
+    container_name: application
+    image: rootuser97/flask-mysql-crud
+    links:                               #used to connect it to database
+      - database
+    ports:
+      - 5000:5000
+    volumes:
+      - ./:/app
+    networks:
+      - frontend
+  database:
+    container_name: database
+    image: mysql
+    ports:
+      - '3309:3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - sql-data:/var/lib/mysql
+    networks:
+      - frontend
+networks:
+  frontend:
+volumes:
+  sql-data:

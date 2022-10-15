@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: application
+spec:
+  selector:
+    matchLabels:
+      app: application
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: application
+    spec:
+      containers:
+      - name: application
+        image: rootuser97/flask-mysql-crud:4.0
+        ports:
+        - containerPort: 5000
+        env:
+          - name: DB_HOST   # Setting Database host address from configMap
+            valueFrom: 
+              configMapKeyRef:
+                name: db-conf  # name of configMap
+                key: host
+          - name: DB_NAME  # Setting Database name from configMap
+            valueFrom:
+              configMapKeyRef:
+                name: db-conf 
+                key: dbname
+          - name: DB_USERNAME  # Setting Database username from Secret
+            valueFrom:
+              secretKeyRef:
+                name: db-root-credentials # Secret Name
+                key: username
+          - name: DB_PASSWORD # Setting Database password from Secret
+            valueFrom:
+              secretKeyRef:
+                name: db-root-credentials
+                key: password
